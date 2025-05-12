@@ -1,37 +1,37 @@
 'use client';
-import React, { useState, useEffect, useRef } from "react";
-import Image from "next/image";
-import Link from "next/link";
+import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 
 const movies = [
   {
-    title: "Joker",
-    poster: "/pics/annette-poster-691x1024-1.jpg",
-    banner: "/pics/13980319122404690176142110.jpg",
+    title: 'Joker',
+    poster: '/pics/annette-poster-691x1024-1.jpg',
+    banner: '/pics/13980319122404690176142110.jpg',
     rating: 8.4,
-    link: "/movies/joker"
+    link: '/movies/joker',
   },
   {
-    title: "Money Heist",
-    poster: "/pics/Horror-Movie-Poster-vol2.jpg",
-    banner: "/pics/file.jpg",
+    title: 'Money Heist',
+    poster: '/pics/Horror-Movie-Poster-vol2.jpg',
+    banner: '/pics/file.jpg',
     rating: 8.2,
-    link: "/movies/money-heist"
+    link: '/movies/money-heist',
   },
   {
-    title: "The Penguin",
-    poster: "/pics/file.jpg",
-    banner: "/pics/annette-poster-691x1024-1.jpg",
+    title: 'The Penguin',
+    poster: '/pics/file.jpg',
+    banner: '/pics/annette-poster-691x1024-1.jpg',
     rating: 7.9,
-    link: "/movies/the-penguin"
+    link: '/movies/the-penguin',
   },
   {
-    title: "Vikings",
-    poster: "/pics/13980319122404690176142110.jpg",
-    banner: "/pics/Horror-Movie-Poster-vol2.jpg",
+    title: 'Vikings',
+    poster: '/pics/13980319122404690176142110.jpg',
+    banner: '/pics/Horror-Movie-Poster-vol2.jpg',
     rating: 8.5,
-    link: "/movies/vikings"
-  }
+    link: '/movies/vikings',
+  },
 ];
 
 export default function SliderMovies() {
@@ -42,8 +42,13 @@ export default function SliderMovies() {
     intervalRef.current = setInterval(() => {
       setActive((prev) => (prev + 1) % movies.length);
     }, 3000);
-    
-    return () => intervalRef.current && clearInterval(intervalRef.current);
+
+    // تابع بازگشتی برای cleanup
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
   }, []);
 
   const handleSelect = (idx: number) => {
@@ -68,22 +73,18 @@ export default function SliderMovies() {
             className="object-cover transition-all duration-700"
             priority
           />
-          
           {/* گرادیانت سیاه از راست به چپ برای تیره کردن بخش اسلایدر */}
           <div className="absolute inset-0 bg-gradient-to-l from-black via-black/80 to-transparent"></div>
-          
           {/* گرادیانت تیره از پایین برای متن */}
           <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
-          
           {/* گرادیانت تیره از بالا برای ادغام با منوی بالا */}
           <div className="absolute inset-0 bg-gradient-to-b from-black to-transparent h-32"></div>
-          
           {/* گرادیانت‌های کناری برای ادغام با بدنه سایت */}
           <div className="absolute inset-0 bg-gradient-to-r from-black to-transparent w-16"></div>
           <div className="absolute inset-0 right-0 bg-gradient-to-l from-black to-transparent w-16"></div>
         </div>
       </div>
-      
+
       {/* محتوای اصلی */}
       <div className="relative z-10 w-full min-h-0">
         {/* بک گراند موبایل - فقط در موبایل نمایش داده می‌شود */}
@@ -96,7 +97,6 @@ export default function SliderMovies() {
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
-          
           {/* دکمه پخش در موبایل */}
           <Link href={movies[active].link}>
             <div className="absolute inset-0 flex items-center justify-center">
@@ -110,7 +110,7 @@ export default function SliderMovies() {
             </div>
           </Link>
         </div>
-        
+
         <div className="flex flex-col sm:flex-row justify-between">
           {/* بخش سمت چپ - فقط دکمه پخش - در موبایل مخفی می‌شود */}
           <div className="w-full sm:w-[40%] lg:w-[40%] hidden sm:flex items-center justify-center h-[80vh]">
@@ -127,7 +127,7 @@ export default function SliderMovies() {
               </Link>
             </div>
           </div>
-          
+
           {/* بخش راست - اسلایدر و اطلاعات فیلم */}
           <div className="w-full sm:w-[60%] lg:w-[60%] sm:h-[80vh] flex flex-col items-start justify-center">
             {/* اسلایدر بزرگتر */}
@@ -143,7 +143,6 @@ export default function SliderMovies() {
                     <span className="text-xs sm:text-sm md:text-lg text-white">/10</span>
                   </div>
                 </div>
-                
                 {/* دکمه‌های کنترل در همان خط افقی */}
                 <div className="flex space-x-1 items-center">
                   <button
@@ -166,33 +165,31 @@ export default function SliderMovies() {
                   </button>
                 </div>
               </div>
-              
               {/* اسلایدر */}
-              <div className="flex flex-row items-center justify-start sm:justify-center gap-2 sm:gap-4 md:gap-6 lg:gap-8 overflow-x-auto sm:overflow-visible pb-2 sm:pb-0 no-scrollbar">              
+              <div className="flex flex-row items-center justify-start sm:justify-center gap-2 sm:gap-4 md:gap-6 lg:gap-8 overflow-x-auto sm:overflow-visible pb-2 sm:pb-0 no-scrollbar">
                 {movies.map((movie, idx) => (
                   <div
                     key={movie.title}
                     className={`transition-all duration-500 cursor-pointer flex-shrink-0 ${
                       active === idx
-                        ? "opacity-100 scale-105 sm:scale-110 z-10"
-                        : "opacity-70 scale-95 sm:scale-90 hover:opacity-90 hover:scale-100 sm:hover:scale-95"
+                        ? 'opacity-100 scale-105 sm:scale-110 z-10'
+                        : 'opacity-70 scale-95 sm:scale-90 hover:opacity-90 hover:scale-100 sm:hover:scale-95'
                     }`}
                     onClick={() => handleSelect(idx)}
                   >
-                    <div className={`relative w-24 sm:w-32 md:w-36 lg:w-44 h-36 sm:h-48 md:h-56 lg:h-64 rounded-lg overflow-hidden border-2 sm:border-4 ${
-                      active === idx ? "border-yellow-400" : "border-transparent"
-                    } shadow-lg sm:shadow-xl`}>
-                      <Image
-                        src={movie.poster}
-                        alt={movie.title}
-                        fill
-                        className="object-cover"
-                      />
+                    <div
+                      className={`relative w-24 sm:w-32 md:w-36 lg:w-44 h-36 sm:h-48 md:h-56 lg:h-64 rounded-lg overflow-hidden border-2 sm:border-4 ${
+                        active === idx ? 'border-yellow-400' : 'border-transparent'
+                      } shadow-lg sm:shadow-xl`}
+                    >
+                      <Image src={movie.poster} alt={movie.title} fill className="object-cover" />
                     </div>
                     {/* اسم فیلم زیر هر اسلاید - در موبایل کوچکتر */}
-                    <span className={`mt-1 sm:mt-2 block text-center text-xs sm:text-sm md:text-base font-bold truncate ${
-                      active === idx ? "text-yellow-400" : "text-white"
-                    }`}>
+                    <span
+                      className={`mt-1 sm:mt-2 block text-center text-xs sm:text-sm md:text-base font-bold truncate ${
+                        active === idx ? 'text-yellow-400' : 'text-white'
+                      }`}
+                    >
                       {movie.title}
                     </span>
                   </div>
@@ -202,7 +199,7 @@ export default function SliderMovies() {
           </div>
         </div>
       </div>
-      
+
       {/* نشان دادن برگزیده‌ها مشابه عکس */}
       <div className="relative z-10 mt-2 sm:mt-4 text-white text-right px-4 sm:px-8 md:px-12 pb-4 sm:pb-8 bg-black">
         <h3 className="text-lg sm:text-xl font-bold mb-2">برگزیده‌ها</h3>
